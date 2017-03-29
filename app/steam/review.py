@@ -59,7 +59,7 @@ class Review(object):
         if num_owned_games_div is not None:
             num_owned_games, = get_numerical_groups(num_owned_games_div,
                                                     products_re,
-                                                    float)
+                                                    int)
         else:
             num_owned_games = 0
 
@@ -67,7 +67,7 @@ class Review(object):
         if num_reviews_div is not None:
             num_reviews, = get_numerical_groups(find_div_text("num_reviews"),
                                                 reviews_re,
-                                                float)
+                                                int)
         else:
             num_reviews = 0
 

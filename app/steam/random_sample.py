@@ -5,9 +5,8 @@ import os
 import random
 import review
 
+from util import data_dir
 from operator import itemgetter
-
-data_dir = os.path.join("..", "..", "data")
 
 if __name__ == '__main__':
     with open(os.path.join(data_dir, "app_ids.json")) as f:
