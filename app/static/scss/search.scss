@@ -2,6 +2,7 @@ $background: #444444;
 $background-stripes-dark: #000000;
 $background-stripes-light: #222222;
 $hover: rgb(98, 122, 129);
+$hover-alt: rgb(96, 112, 126);
 $hover-stripes-opacity: 0.97;
 $hover-stripes-dark: rgba(96, 112, 126, $hover-stripes-opacity);
 $hover-stripes-light: rgba(98, 122, 129, $hover-stripes-opacity);
@@ -68,13 +69,12 @@ h1 {
 }
 .topcorner{
 	position:absolute;
-	text-align: right;
-	top:2%;
-	right:2%;
+	top: 15px;
+	left: 15px;
 }
 .btn {
 	background: none;
-	border: 3px solid white;
+	border: 3px solid $white;
 	border-radius: 0px;
 	text-transform: uppercase;
 	font-weight: 600;
@@ -84,7 +84,17 @@ h1 {
 }
 .btn:hover {
 	background: none;
-	border-color: $hover;
+	border: 3px solid $hover;
+	outline: none;
+}
+.btn:focus {
+	background: none;
+	border-color: $white;
+	outline: none;
+}
+.btn-desc {
+	display: block;
+	font-size: 11px;
 }
 .details-overlay {
 	position: fixed;
@@ -197,58 +207,102 @@ h1 {
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
    color: $hover;
 }
-.result-box:hover .result-box-caption {
-  opacity: 1;
-}
-.result-box {
-	cursor: pointer;
+.results {
+	margin-top: -15px;
 
-	.result-box-caption {
-		opacity: 0;
-		background: repeating-linear-gradient(
-			135deg,
-			$hover-stripes-light,
-			$hover-stripes-light 4px,
-			$hover-stripes-dark 4px,
-			$hover-stripes-dark 8px
-		);
-		position: absolute;
-		bottom: 0;
-		text-align: center;
-		width: 100%;
-		height: 100%;
-		transition: all 0.2s;
+	.result-box:hover .result-box-caption {
+	  opacity: 1;
+	}
+	.result-box {
+		cursor: pointer;
 
-		.result-box-caption-content {
-			width: 100%;
-			text-align: center;
+		.result-box-caption {
+			opacity: 0;
+			background: repeating-linear-gradient(
+				135deg,
+				$hover-stripes-light,
+				$hover-stripes-light 4px,
+				$hover-stripes-dark 4px,
+				$hover-stripes-dark 8px
+			);
 			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
+			bottom: 0;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+			transition: all 0.2s;
 
-			.result-expand {
-				color: $white;
-				font-weight: 400;
-				font-size: 18px;
-			}
-			.result-text {
-				color: $white;
-				font-weight: 600;
-				font-size: 23px;
-				text-transform: uppercase;
-				padding: 20px;
+			.result-box-caption-content {
+				width: 100%;
+				text-align: center;
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+
+				.result-expand {
+					color: $white;
+					font-weight: 400;
+					font-size: 18px;
+				}
+				.result-text {
+					color: $white;
+					font-weight: 600;
+					font-size: 23px;
+					text-transform: uppercase;
+					padding: 20px;
+				}
 			}
 		}
+		.result-img {
+			width: 100%;
+		}
 	}
-	.result-img {
-		width: 100%;
+	.result-head {
+		position: relative;
+		text-align: center;
+		font-size: 23px;
+		z-index: 2;
 	}
-}
-.result-head {
-	position: relative;
-	text-align: center;
-	font-size: 23px;
-	z-index: 2;
+	.tags {
+		text-align: center;
+		margin-top: 25px;
+		margin-bottom: 25px;
+
+		h3 {
+			padding: 0;
+			margin: 0;
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		p {
+			padding: 0;
+			margin-bottom: 15px;
+		}
+
+		.tag {
+			border: 3px solid $white;
+			border-radius: 12px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: 600;
+			padding: 3px 10px 3px 10px;
+			margin-left: 5px;
+			margin-right: 5px;
+			text-transform: lowercase;
+			transition: 0.15s ease-in-out;
+		}
+		.tag:hover {
+			// border-color: $hover;
+			color: $hover;
+			background: $white;
+		}
+
+		.selected {
+			background: $white;
+			color: $hover;
+		}
+	}
 }
 .searchbar:focus {
 	outline-width: 0;
@@ -264,8 +318,24 @@ h1 {
 	opacity: 0.7;
 	z-index: 0;
 }
+.steam-login {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	// position: relative;
+	// left: 50%;
+	// transform: translateX(-50%);
+}
 .suggested {
 	color: $hover;
 	text-align: center;
 	font-size: 18px;
+}
+.unselectable {
+	cursor: default;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
