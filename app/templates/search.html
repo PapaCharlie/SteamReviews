@@ -9,10 +9,14 @@
         <img class="steam-back" src="/static/steam.png">
         <h1>STEAMY REVIEWS</h1>
         <div class="overlay"></div>
-        <div class="topcorner">
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
+        <div class="topcorner" data-test="elem1 elem2 elem3" >
+            <p>Project name: {{ name }}</p>
+            <p>Student NetIDs: {{ netid }}</p>
         </div>
+        <button class="btn btn-info steam-login">
+            <span>Login to Steam</span>
+            <span class="btn-desc">For personalized suggestions</span>
+        </button>
         <div class="container">
             <form class="form-inline global-search">
                 <div class="form-group">
@@ -42,8 +46,15 @@
 
         {% if ranking is defined %}
             <!-- With love from https://github.com/BlackrockDigital/startbootstrap-creative -->
-            <div class="container-fluid">
+            <div class="container-fluid results">
                 <h2 class="result-head">Showing results for: <a href="{{ game.steam_url() }}"><span class="emphasize">{{ game.name }}</span></a></h2>
+                <div class="tags">
+                    <h3 class="unselectable">Tags generated from game reviews</h3>
+                    <p class="unselectable">Click to remove from results</p>
+                    <span class="tag selected">Tag 1</span>
+                    <span class="tag">Tag 2</span>
+                    <span class="tag">Tag 3</span>
+                </div>
                 <div class="row no-gutter">
                 {% for game in ranking %}
                     <div class="col-sm-4">

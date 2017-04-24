@@ -1,5 +1,6 @@
 *.pyc
 .DS_Store
+.map
 venv
 migrations
 .ipynb_checkpoints/
