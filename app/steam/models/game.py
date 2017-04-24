@@ -252,6 +252,9 @@ class Game(object):
     def steam_image_url(self):
         return "http://cdn.akamai.steamstatic.com/steam/apps/%s/header.jpg"%self.app_id
 
+    def tags_json(self):
+        return json.dumps(self.tags)
+
     def to_json(self):
         return {
             "app_id": self.app_id,

@@ -11,19 +11,14 @@ $(document).ready(function () {
 		$(".details-img").attr("src", resultBox.children(".result-img").attr("src"));
 		$(".details-link").attr("href", resultBox.data("steam-url"));
 
-		var tags_str = resultBox.data("tags");
+		var tags = resultBox.data("tags");
 		var tags_keys = [];
 		var tags_values = [];
-		var key_regex = /'\s*(.*?)\s*'/;
-		var value_regex = /\d+/;
-		tags_str.split(",").forEach(function(section) {
-			var key_match = key_regex.exec(section);
-			var value_match = value_regex.exec(section);
-
-			tags_keys.push(key_match[1]);
-			tags_values.push(Number(value_match[0]));
-		});
-
+		for (var key in tags) {
+	    if (!tags.hasOwnProperty(key)) continue;
+	    tags_keys.push(key);
+	    tags_values.push(tags[key]);
+	  }
 		var data = {
 		    labels: tags_keys,
 		    datasets: [

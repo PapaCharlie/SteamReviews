@@ -47,7 +47,7 @@
                 <div class="row no-gutter">
                 {% for game in ranking %}
                     <div class="col-sm-4">
-                        <div class="result-box" data-tags="{{ game.tags}}" data-title="{{ game.name }}" data-steam-url="{{ game.steam_url() }}">
+                        <div class="result-box" data-tags="{{ game.tags_json() }}" data-title="{{ game.name }}" data-steam-url="{{ game.steam_url() }}">
                             <img src="{{ game.steam_image_url() }}" class="result-img">
                             <div class="result-box-caption">
                                 <div class="result-box-caption-content">
