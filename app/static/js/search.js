@@ -5,6 +5,10 @@ $(document).ready(function () {
 		});
 	});
 
+	$(".details-query").click(function() {
+		window.location.replace("/?app_id=" + selectedAppID);
+	});
+
 	$(".result-box").click(function() {
 		var resultBox = $(this);
 		$(".details-title").text(resultBox.data("title"));
