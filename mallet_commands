@@ -1,0 +1,7 @@
+.\mallet-2.0.8\bin\mallet import-dir --input .\data\raw_reviews\ --output reviews.mallet --keep-sequence --remove-stopwords
+.\mallet-2.0.8\bin\mallet train-topics --input reviews.mallet --num-topics 40 --output-state .\mallet_output\reviews-topic-state.gz --output-doc-topics .\mallet_output\doc-topics.gz --output-topic-keys .\mallet_output\topic-keys.gz --num-top-words 20
+
+
+
+.\mallet-2.0.8\bin\mallet import-dir --input .\data\cut_reviews\ --output cut_reviews.mallet --keep-sequence --remove-stopwords
+.\mallet-2.0.8\bin\mallet train-topics --input cut_reviews.mallet --num-topics 40 --output-state .\mallet_output\cut_reviews-topic-state.gz --output-doc-topics .\mallet_output\cut_doc-topics.gz --output-topic-keys .\mallet_output\cut_topic-keys.gz --num-top-words 20
