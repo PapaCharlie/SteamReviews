@@ -13,6 +13,7 @@ import boto3
 socketio = SocketIO()
 app = Flask(__name__)
 app.config.from_object(os.environ["APP_SETTINGS"])
+app.config.update(STEAM_API_KEY=os.environ['STEAM_API_KEY'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 import nltk
