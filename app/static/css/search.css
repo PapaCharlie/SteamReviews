@@ -99,7 +99,7 @@ h1 {
       position: relative;
       width: 100%;
       padding: 10px 4px 0px 4px; }
-    .details-overlay .details-content-wrapper .details-link {
+    .details-overlay .details-content-wrapper .details-btn {
       position: relative;
       display: block;
       border-bottom: none;
@@ -107,9 +107,9 @@ h1 {
       font-size: 16px;
       font-weight: 600;
       text-align: center; }
-    .details-overlay .details-content-wrapper .details-link:hover {
-      border-bottom: none;
-      color: #627a81; }
+    .details-overlay .details-content-wrapper .details-btn:hover {
+      color: #627a81;
+      border-color: #627a81; }
     .details-overlay .details-content-wrapper .details-nav {
       position: relative;
       height: 25px; }
