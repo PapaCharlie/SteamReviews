@@ -3,7 +3,7 @@ from flask import request, jsonify, abort
 import os
 
 
-from flask import request, render_template, session, redirect
+from flask import request, render_template, session, redirect, make_response
 from app.accounts import accounts
 # Import module models
 from app.accounts.models.user import *

@@ -3,6 +3,7 @@ from __future__ import print_function
 import app
 import logging
 import urllib
+import json
 import numpy as np
 
 from . import irsystem, request, render_template, session
@@ -43,10 +44,9 @@ def search():
 
 def render_ranking_page(game):
     bias_vector = None
-    print(session)
-    if ('bias_vector' in session):
-        bias_vector = np.array(session['bias_vector'])
-    print(bias_vector)
+    if (request.cookies.get("bias_vector")):
+        bias_list = json.loads(request.cookies.get("bias_vector"))
+        bias_vector = np.array(bias_list)
     ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, biasVector=bias_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
     return render_template("search.html", game=game, ranking=ranking, **DEFAULT_KWARGS)
