@@ -204,10 +204,27 @@ class Game(object):
                     islice(utils.table_scan(cls, FilterExpression=attr_cond, Limit=limit), limit))
 
     @classmethod
-    def get_ranking_for_game(cls, query):
+    def compute_bias_vector(cls, app_id_list):
+        startVector = np.zeros(Game.__compressed_matrix.shape[1])
+        for appid in app_id_list:
+            if appid in Game.__app_id_to_index:
+                startVector += Game.__compressed_matrix[Game.__app_id_to_index[appid]]
+        startVector = (startVector / np.linalg.norm(startVector))
+        print(startVector)
+        print(np.linalg.norm(startVector))
+        return startVector * 0.3
+
+    @classmethod
+    def get_ranking_for_game(cls, query, biasVector):
         if query.app_id not in cls.__app_id_to_index:
             raise GameNotFoundException(query.app_id)
         else:
+            if (biasVector is not None):
+                base = Game.__compressed_matrix[Game.__app_id_to_index[query.app_id]]
+                query_vector = base + biasVector
+                print(np.linalg.norm(base))
+                print(base)
+                return Game.compute_ranking_for_vector(query_vector)
             return [cls.get(app_id)
                     for app_id in cls.__ranking[cls.__app_id_to_index[query.app_id]]
                     if app_id != query.app_id]
@@ -215,7 +232,7 @@ class Game(object):
     @classmethod
     def compute_ranking_for_vector(cls, query_vector):
         return [cls.get(cls.__app_ids[index])
-                for index in np.argsort(cls.__compressed_matrix.dot(query_vector))[::1]]
+                for index in np.argsort(cls.__compressed_matrix.dot(query_vector))[::-1]]
 
     def __init__(self, app_id, name, developer, publisher, owners, userscore, num_reviews,
                  score_rank, price, tags, last_updated,  **kwargs):

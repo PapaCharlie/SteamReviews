@@ -14,6 +14,7 @@ class Config(object):
     GAME_CACHE_SIZE = os.environ.get("GAME_CACHE_SIZE", 1000)
     GAME_CACHE_PULL_ON_LOAD = int(os.environ.get("GAME_CACHE_PULL_ON_LOAD", 1)) == 1
     UPDATE_GAME_ON_GET = int(os.environ.get("UPDATE_GAME_ON_GET", 0)) == 1
+    STEAM_API_KEY = os.environ['STEAM_API_KEY']
 
 class ProductionConfig(Config):
     DEBUG = False
