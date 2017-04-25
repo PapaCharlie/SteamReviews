@@ -3,8 +3,9 @@ from __future__ import print_function
 import app
 import logging
 import urllib
+import numpy as np
 
-from . import irsystem, request, render_template
+from . import irsystem, request, render_template, session
 from app.irsystem.models.search import do_jaccard, do_cosine_sim
 from app.steam.models import Game
 
@@ -41,6 +42,11 @@ def search():
         return render_template("search.html", **DEFAULT_KWARGS)
 
 def render_ranking_page(game):
-    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS)
+    bias_vector = None
+    print(session)
+    if ('bias_vector' in session):
+        bias_vector = np.array(session['bias_vector'])
+    print(bias_vector)
+    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, biasVector=bias_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
     return render_template("search.html", game=game, ranking=ranking, **DEFAULT_KWARGS)
