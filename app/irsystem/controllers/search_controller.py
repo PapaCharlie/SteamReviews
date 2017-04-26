@@ -37,6 +37,7 @@ def search():
                                    didyoumean1=didyoumean1,
                                    didyoumean2=didyoumean2,
                                    query=query,
+                                   username=request.cookies.get("username"),
                                    **DEFAULT_KWARGS)
 
     else:

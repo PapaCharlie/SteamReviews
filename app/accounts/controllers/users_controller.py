@@ -20,6 +20,7 @@ def login():
     username = request.form['username']
     redirect_to_home = redirect("/")
     response = make_response(redirect_to_home)
+    response.set_cookie("username", value=username)
     if (username != ""):
         params = {
             'key': STEAM_API_KEY,
