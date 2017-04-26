@@ -60,7 +60,7 @@
                     <div class="col-sm-4">
                         <div class="result-box"
                              data-app-id="{{ game.app_id }}"
-                             data-tags="{{ game.tags_json() }}"
+                             data-vector="{{ game.vector_parsable() }}"
                              data-title="{{ game.name }}"
                              data-steam-url="{{ game.steam_url() }}">
                             <img src="{{ game.steam_image_url() }}" class="result-img">
