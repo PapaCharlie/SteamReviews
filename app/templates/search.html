@@ -63,6 +63,7 @@
                         <div class="result-box"
                              data-app-id="{{ ranked_game.app_id }}"
                              data-title="{{ ranked_game.name }}"
+                             data-tags=" {{ ranked_game.tags_json() }}"
                              data-features="{{ ranked_game.intersect_features(query_game, True) }}"
                              data-steam-url="{{ ranked_game.steam_url() }}">
                             <img src="{{ ranked_game.steam_image_url() }}" class="result-img">

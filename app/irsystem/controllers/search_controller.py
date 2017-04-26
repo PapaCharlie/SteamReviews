@@ -25,7 +25,10 @@ def search():
         if game is not None:
             return render_ranking_page(game)
         else:
-            return render_template("search.html", no_such_app_id=True, **DEFAULT_KWARGS)
+            return render_template("search.html",
+                                   no_such_app_id=True,
+                                   username=request.cookies.get("username"),
+                                   **DEFAULT_KWARGS)
     elif query is not None and len(query) > 0:
         game = Game.find_by_name(query)
         if game is not None:
@@ -41,13 +44,19 @@ def search():
                                    **DEFAULT_KWARGS)
 
     else:
-        return render_template("search.html", **DEFAULT_KWARGS)
+        return render_template("search.html",
+                               username=request.cookies.get("username"),
+                               **DEFAULT_KWARGS)
 
 def render_ranking_page(game):
     username = request.cookies.get("username")
     library_vector = None
-    if request.cookies.get("library_vector"):
+    if "library_vector" in request.cookies:
         library_vector = np.array(json.loads(request.cookies.get("library_vector")))
     ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, library_vector=library_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
-    return render_template("search.html", query_game=game, ranking=ranking, **DEFAULT_KWARGS)
+    return render_template("search.html",
+                           query_game=game,
+                           ranking=ranking,
+                           username=username,
+                           **DEFAULT_KWARGS)
