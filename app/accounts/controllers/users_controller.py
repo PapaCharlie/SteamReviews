@@ -20,7 +20,6 @@ def login():
     username = request.form['username']
     redirect_to_home = redirect("/")
     response = make_response(redirect_to_home)
-    response.set_cookie("username", value=username)
     if (username != ""):
         params = {
             'key': STEAM_API_KEY,
@@ -31,6 +30,11 @@ def login():
         if (success == 1):
             steamid = r.json()['response']['steamid']
             response.set_cookie("steam_ID", value=steamid)
+            del params['vanityurl']
+            params['steamids'] = username
+            r3 = requests.get(
+                "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/", params)
+            response.set_cookie("username", value=r3.json()['response']['players'][0]['personaname'])
             r2 = requests.get("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
                               STEAM_API_KEY + "&steamid=" +
                               steamid + "&format=json&include_played_free_games=1")
