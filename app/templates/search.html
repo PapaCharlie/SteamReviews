@@ -105,15 +105,15 @@
                         </button>
                         <h4 class="modal-title unselectable">Steam login</h4>
                     </div>
-                    <form>
+                    <form action="/accounts/login" method="post">
                     <div class="modal-body">
                         <p>Logging into Steam helps us personalize search results and suggest games based on your library.</p>
                         <div class="form-group">
-                            <input class="login-input form-input" type="text" placeholder="Steam ID">
+                            <input class="login-input form-input" name="username" type="text" placeholder="Steam ID">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-default login-btn" data-dismiss="modal">Login</button>
+                        <button type="submit" class="btn btn-default login-btn" >Login</button>
                     </div>
                     </form>
                 </div>
