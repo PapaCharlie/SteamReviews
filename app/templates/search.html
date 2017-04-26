@@ -49,16 +49,16 @@
             <!-- With love from https://github.com/BlackrockDigital/startbootstrap-creative -->
             <div class="container-fluid results">
                 <h2 class="result-head">Showing results for: <a href="{{ game.steam_url() }}"><span class="emphasize">{{ game.name }}</span></a></h2>
-                <div class="tags text-center" data-tags="{{ game.tags_json() }}">
+                <!-- <div class="tags text-center" data-tags="{{ game.tags_json() }}">
                     <h3 class="unselectable">Tags generated from game reviews</h3>
                     <p class="unselectable">Click to remove from results</p>
-                </div>
+                </div> -->
                 <div class="row no-gutter">
                 {% for game in ranking %}
                     <div class="col-sm-4">
                         <div class="result-box"
                              data-app-id="{{ game.app_id }}"
-                             data-tags="{{ game.tags_json() }}"
+                             data-vector="{{ game.vector_parsable() }}"
                              data-title="{{ game.name }}"
                              data-steam-url="{{ game.steam_url() }}">
                             <img src="{{ game.steam_image_url() }}" class="result-img">
@@ -105,11 +105,11 @@
                         </button>
                         <h4 class="modal-title unselectable">Steam login</h4>
                     </div>
-                    <form>
+                    <form action="/accounts/login" method="post">
                     <div class="modal-body">
                         <p>Logging into Steam helps us personalize search results and suggest games based on your library.</p>
                         <div class="form-group">
-                            <input class="login-input form-input" type="text" placeholder="Steam ID">
+                            <input class="login-input form-input" type="text" name="username" placeholder="Steam ID">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -128,6 +128,8 @@
             {% if game is defined %}
                 currentGameTitle = "{{ game.name }}";
                 var currentGameTags = "{{ game.tags_json() }}";
+                var currentGameVectorStr = "{{ game.vector_parsable() }}";
+                var vectorNamesStr = "{{ game.vector_names() }}";
             {% endif %}
         </script>
         <script src="/static/js/search.js"></script>
