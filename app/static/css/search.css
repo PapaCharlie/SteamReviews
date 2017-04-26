@@ -213,7 +213,8 @@ h1 {
     position: relative;
     text-align: center;
     font-size: 23px;
-    z-index: 2; }
+    z-index: 2;
+    margin-bottom: 30px; }
   .results .tags {
     text-align: center;
     margin-top: 25px;
