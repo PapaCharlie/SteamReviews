@@ -29,13 +29,14 @@ def main():
     for app_id in app_ids:
         with open("data/cut_reviews/%s"%app_id, "w") as f:
             toks = 0
-            for r in reviews[app_id]:
-                if toks > 5000:
-                    break
-                else:
-                    toks += num_tokens(r["body"])
-                    f.write(r["body"].encode("utf-8").replace(u"\u055a", "'"))
-                f.write("")
+            if len(reviews[app_id]) >= 100:
+                for r in reviews[app_id]:
+                    if toks > 5000:
+                        break
+                    else:
+                        toks += num_tokens(r["body"])
+                        f.write(r["body"].encode("ascii", "ignore"))
+                    f.write("\n")
         del reviews[app_id]
 
 if __name__ == '__main__':
