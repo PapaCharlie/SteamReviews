@@ -33,6 +33,10 @@
                 </div>
                 <button type="submit" class="btn btn-info">Submit</button>
             </form>
+<!--             <button class="btn btn-info">
+                <span>Top Steam library suggestions</span>
+                <span class="btn-desc">Ignoring the query field</span>
+            </button> -->
             {% if didyoumean1 is defined %}
                  <h2 class="suggested">
                     We couldn't find anything for <span class="emphasize">{{query|e}}</span>!
@@ -60,6 +64,7 @@
                     <div class="col-sm-4">
                         <div class="result-box"
                              data-app-id="{{ game.app_id }}"
+                             data-tags=" {{ game.tags_json() }}"
                              data-vector="{{ game.vector_parsable() }}"
                              data-title="{{ game.name }}"
                              data-steam-url="{{ game.steam_url() }}">
