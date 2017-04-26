@@ -3,6 +3,7 @@ $(document).ready(function () {
 	var attributeChart = $(".details-attribute-chart");
 	var currentGameTagsKeys = [];
 	var currentGameTagsValues = [];
+	var currentGameVector;
 	var detailsExpanded = false;
 	var detailsRadarChart;
 	var selectedAppID;
@@ -16,12 +17,15 @@ $(document).ready(function () {
 			currentGameTagsValues.push(currentGameTags[key]);
 		}
 
-		var tags_div = $(".tags");
-		var search_tags = tags_div.data("tags");
-		for (var key in search_tags) {
-			if (!search_tags.hasOwnProperty(key)) continue;
-			tags_div.append("<p class='tag selected'>" + key + "</p>")
-		}
+		// var tags_div = $(".tags");
+		// var search_tags = tags_div.data("tags");
+		// for (var key in search_tags) {
+		// 	if (!search_tags.hasOwnProperty(key)) continue;
+		// 	tags_div.append("<p class='tag selected'>" + key + "</p>")
+		// }
+
+		vectorNames = vectorNamesStr.split(",");
+		currentGameVector = currentGameVectorStr.split(",").map(Number).map(Math.log);
 	}
 
 	// Handle event listeners
@@ -51,16 +55,17 @@ $(document).ready(function () {
 
 			selectedAppID = resultBox.data("app-id");
 
-			var tags = resultBox.data("tags");
-			var tagsKeys = [];
-			var tagsValues = [];
-			for (var key in tags) {
-				if (!tags.hasOwnProperty(key)) continue;
-				tagsKeys.push(key);
-				tagsValues.push(tags[key]);
-			}
+			var gameVector = resultBox.data("vector");
+			gameVector = gameVector.split(",").map(Number).map(Math.log);
+			// var tagsKeys = [];
+			// var tagsValues = [];
+			// for (var key in tags) {
+			// 	if (!tags.hasOwnProperty(key)) continue;
+			// 	tagsKeys.push(key);
+			// 	tagsValues.push(tags[key]);
+			// }
 			var data = {
-			    labels: tagsKeys,
+			    labels: vectorNames,
 			    datasets: [
 			        {
 			            label: gameTitle,
@@ -70,7 +75,7 @@ $(document).ready(function () {
 			            pointBorderColor: "#fff",
 			            pointHoverBackgroundColor: "#fff",
 			            pointHoverBorderColor: "rgba(255,99,132,1)",
-			            data: tagsValues
+			            data: gameVector
 			        },
 			        {
 			            label: currentGameTitle,
@@ -80,7 +85,7 @@ $(document).ready(function () {
 			            pointBorderColor: "#fff",
 			            pointHoverBackgroundColor: "#fff",
 			            pointHoverBorderColor: "rgba(90, 179, 206, 1)",
-			            data: currentGameTagsValues
+			            data: currentGameVector
 			        }
 			    ]
 			};
@@ -109,21 +114,21 @@ $(document).ready(function () {
 		    ]
 		};
 
-		var attributeChart = $(".details-attribute-chart");
-		var myRadarChart = new Chart(attributeChart, {
-			type: 'radar',
-		    data: data,
-		    options: {
-		    	legend: {
-		    		display: false
-		    	},
-		    	scale: {
-			        ticks: {
-			            display: false
-			        }
-			    },
-			    tooltips: {
-			    	enabled: false
+			detailsRadarChart = new Chart(attributeChart, {
+				type: 'radar',
+			    data: data,
+			    options: {
+			    	legend: {
+			    		position: 'bottom'
+			    	},
+			    	scale: {
+				        ticks: {
+				            display: false
+				        }
+				    },
+				    tooltips: {
+				    	enabled: false
+				    }
 			    }
 		    }
 		});

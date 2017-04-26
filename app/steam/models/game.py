@@ -1,5 +1,6 @@
 from __future__ import print_function, division
 
+import csv
 import json
 import logging
 import numpy as np
@@ -259,6 +260,14 @@ class Game(object):
             raise GameNotFoundException(self.app_id)
         else:
             return Game.__compressed_matrix[Game.__app_id_to_index[self.app_id]]
+
+    def vector_names(self):
+        with open(data_file('categories.csv'), 'rb') as csvfile:
+            category_reader = list(csv.reader(csvfile))
+            return ",".join([category[0] for category in category_reader])
+
+    def vector_parsable(self):
+        return ",".join(map(str, self.vector()))
 
     def steam_url(self):
         return "http://store.steampowered.com/app/%s"%self.app_id
