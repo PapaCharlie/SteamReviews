@@ -74,7 +74,6 @@ class Game(object):
         cls.__name_inverted_index = {game.normalized_name: game.app_id
                                      for game in cls.__game_cache.itervalues()}
         cls.__dimensions = load_feature_names()
-        print(cls.__dimensions)
 
     @classmethod
     def _create_table(cls):
@@ -288,13 +287,9 @@ class Game(object):
     def best_feature_names(self, json_format=False):
         dimensions = Game.__dimensions[self.__best_features]
         if json_format:
-            print(json.dumps(dimensions.tolist()))
             return json.dumps(dimensions.tolist())
         else:
             return dimensions
-
-    def hello(self):
-        return "\""
 
     def intersect_features(self, other_game, json_format=False):
         features = self.__vector[other_game.__best_features]
