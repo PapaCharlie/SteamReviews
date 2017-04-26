@@ -8,6 +8,11 @@ $(document).ready(function () {
 	var detailsRadarChart;
 	var selectedAppID;
 
+	if(userAccount != "None")
+		$(".user-menu").fadeIn(150);
+	else
+		$(".user-login").fadeIn(150);
+
 	if(currentGameTitle !== undefined) {
 		$('html, body').animate({scrollTop : $(".results").position().top - 15 }, 400);
 
@@ -32,7 +37,7 @@ $(document).ready(function () {
 
 	// Thanks to: http://stackoverflow.com/questions/28631219/how-can-i-unfocus-the-modal-trigger-button-after-closing-the-modal-in-bootstrap
 	$("#login-modal").on("shown.bs.modal", function(e){
-    	$('.steam-login').one('focus', function(e){$(this).blur();});
+    	$('.user-login').one('focus', function(e){$(this).blur();});
 	});
 
 	$(".details-close").click(function() {
@@ -44,6 +49,11 @@ $(document).ready(function () {
 
 	$(".details-query").click(function() {
 		window.location.replace("/?app_id=" + selectedAppID);
+	});
+
+	$(".logout").click(function() {
+		document.cookie = 'username=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		location.reload();
 	});
 
 	$(".result-box").click(function() {

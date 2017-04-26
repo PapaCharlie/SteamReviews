@@ -30,6 +30,13 @@ def login():
         if (success == 1):
             steamid = r.json()['response']['steamid']
             response.set_cookie("steam_ID", value=steamid)
+            del params['vanityurl']
+            params['steamids'] = steamid
+            r3 = requests.get(
+                "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/", params)
+            print(r3.text)
+            response.set_cookie(
+                "username", value=r3.json()['response']['players'][0]['personaname'])
             r2 = requests.get("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
                               STEAM_API_KEY + "&steamid=" +
                               steamid + "&format=json&include_played_free_games=1")
@@ -47,3 +54,4 @@ def login():
             response.set_cookie("steam_id", "", max_age=0)
             response.set_cookie("bias_vector", "", max_age=0)
     return response
+

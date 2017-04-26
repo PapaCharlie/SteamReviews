@@ -13,10 +13,19 @@
             <p>Project name: {{ name }}</p>
             <p>Student NetIDs: {{ netid }}</p>
         </div>
-        <button class="btn btn-info steam-login" data-toggle="modal" data-target="#login-modal">
+        <button class="btn btn-info steam-account user-login" data-toggle="modal" data-target="#login-modal">
             <span>Login to Steam</span>
             <span class="btn-desc">For personalized suggestions</span>
         </button>
+        <div class="dropdown steam-account user-menu">
+            <button class="btn btn-info" id="user-menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="btn-desc">Logged in as</span>
+                <span>{{ username }} <span class="caret"></span></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="user-menu-dropdown">
+                <li><a class="logout unselectable">Logout</a></li>
+            </ul>
+        </div>
         <div class="container">
             <form class="form-inline global-search">
                 <div class="form-group">
@@ -109,11 +118,11 @@
                     <div class="modal-body">
                         <p>Logging into Steam helps us personalize search results and suggest games based on your library.</p>
                         <div class="form-group">
-                            <input class="login-input form-input" type="text" name="username" placeholder="Steam ID">
+                            <input class="login-input form-input" name="username" type="text" placeholder="Steam ID">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-default login-btn" data-dismiss="modal">Login</button>
+                        <button type="submit" class="btn btn-default login-btn" >Login</button>
                     </div>
                     </form>
                 </div>
@@ -124,6 +133,7 @@
         <script src="/static/js/bootstrap.min.js"></script>
         <script src="/static/js/chart.min.js"></script>
         <script>
+            var userAccount = "{{ username }}";
             var currentGameTitle;
             {% if game is defined %}
                 currentGameTitle = "{{ game.name }}";

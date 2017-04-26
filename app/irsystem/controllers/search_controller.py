@@ -25,7 +25,7 @@ def search():
         if game is not None:
             return render_ranking_page(game)
         else:
-            return render_template("search.html", no_such_app_id=True, **DEFAULT_KWARGS)
+            return render_template("search.html", no_such_app_id=True, username=request.cookies.get("username"), **DEFAULT_KWARGS)
     elif query is not None and len(query) > 0:
         game = Game.find_by_name(query)
         if game is not None:
@@ -37,16 +37,18 @@ def search():
                                    didyoumean1=didyoumean1,
                                    didyoumean2=didyoumean2,
                                    query=query,
+                                   username=request.cookies.get("username"),
                                    **DEFAULT_KWARGS)
 
     else:
-        return render_template("search.html", **DEFAULT_KWARGS)
+        return render_template("search.html", username=request.cookies.get("username"), **DEFAULT_KWARGS)
 
 def render_ranking_page(game):
+    user_id = None
     bias_vector = None
     if (request.cookies.get("bias_vector")):
         bias_list = json.loads(request.cookies.get("bias_vector"))
         bias_vector = np.array(bias_list)
     ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, biasVector=bias_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
-    return render_template("search.html", game=game, ranking=ranking, **DEFAULT_KWARGS)
+    return render_template("search.html", game=game, ranking=ranking, username=request.cookies.get("username"), **DEFAULT_KWARGS)

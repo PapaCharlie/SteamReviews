@@ -372,12 +372,49 @@ h1 {
 	opacity: 0.7;
 	z-index: 0;
 }
-.steam-login {
+.steam-account {
+	display: none;
 	position: absolute;
 	top: 15px;
 	right: 15px;
+	margin: 0;
+
+	#user-menu-dropdown {
+		margin-left: 0px !important;
+	}
+	#user-menu-dropdown:active {
+		border-color: $hover;
+	}
+	.dropdown-menu {
+		// background: $modal-background;
+		background: none;
+		border-radius: 0px;
+		border: 3px solid $white;
+		box-shadow: none;
+		margin-top: -2px;
+		width: 100%;
+
+		li {
+			a {
+				color: $white;
+				cursor: pointer;
+				font-size: 14px;
+				font-weight: 600;
+				text-transform: uppercase;
+				border-bottom: none;
+			}
+			a:hover {
+				background: $white;
+				border-bottom: none;
+				color: $hover;
+			}
+		}
+		.last {
+			border-bottom: none;
+		}
+	}
 }
-.steam-login:focus {
+.steam-account:focus {
 	border-color: $hover;
 }
 .suggested {

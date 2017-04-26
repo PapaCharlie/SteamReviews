@@ -301,12 +301,38 @@ h1 {
   opacity: 0.7;
   z-index: 0; }
 
-.steam-login {
+.steam-account {
+  display: none;
   position: absolute;
   top: 15px;
-  right: 15px; }
+  right: 15px;
+  margin: 0; }
+  .steam-account #user-menu-dropdown {
+    margin-left: 0px !important; }
+  .steam-account #user-menu-dropdown:active {
+    border-color: #627a81; }
+  .steam-account .dropdown-menu {
+    background: none;
+    border-radius: 0px;
+    border: 3px solid #FFFFFF;
+    box-shadow: none;
+    margin-top: -2px;
+    width: 100%; }
+    .steam-account .dropdown-menu li a {
+      color: #FFFFFF;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-bottom: none; }
+    .steam-account .dropdown-menu li a:hover {
+      background: #FFFFFF;
+      border-bottom: none;
+      color: #627a81; }
+    .steam-account .dropdown-menu .last {
+      border-bottom: none; }
 
-.steam-login:focus {
+.steam-account:focus {
   border-color: #627a81; }
 
 .suggested {
