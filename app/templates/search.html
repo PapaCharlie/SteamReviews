@@ -23,8 +23,9 @@
                     {% macro searchbar(value) -%}
                         <input class="searchbar" id="input" type="text" name="search" class="form-control" placeholder="Enter a game to get started" value="{{ value|e }}" autofocus>
                     {%- endmacro %}
-                    {% if game is defined %}
-                        {{ searchbar(game.name) }}
+                    <!-- Not using this the at the moment but might revert back later -->
+                    {% if query_game is defined %}
+                        {{ searchbar(query_game.name) }}
                     {% elif query is defined %}
                         {{ searchbar(query) }}
                     {% else %}
@@ -51,25 +52,24 @@
         {% if ranking is defined %}
             <!-- With love from https://github.com/BlackrockDigital/startbootstrap-creative -->
             <div class="container-fluid results">
-                <h2 class="result-head">Showing results for: <a href="{{ game.steam_url() }}"><span class="emphasize">{{ game.name }}</span></a></h2>
-                <!-- <div class="tags text-center" data-tags="{{ game.tags_json() }}">
+                <h2 class="result-head">Showing results for: <a href="{{ query_game.steam_url() }}"><span class="emphasize">{{ query_game.name }}</span></a></h2>
+                <!-- <div class="tags text-center" data-tags="{{ query_game.tags_json() }}">
                     <h3 class="unselectable">Tags generated from game reviews</h3>
                     <p class="unselectable">Click to remove from results</p>
                 </div> -->
                 <div class="row no-gutter">
-                {% for game in ranking %}
+                {% for ranked_game in ranking %}
                     <div class="col-sm-4">
                         <div class="result-box"
-                             data-app-id="{{ game.app_id }}"
-                             data-tags=" {{ game.tags_json() }}"
-                             data-vector="{{ game.vector_parsable() }}"
-                             data-title="{{ game.name }}"
-                             data-steam-url="{{ game.steam_url() }}">
-                            <img src="{{ game.steam_image_url() }}" class="result-img">
+                             data-app-id="{{ ranked_game.app_id }}"
+                             data-title="{{ ranked_game.name }}"
+                             data-features="{{ ranked_game.intersect_features(query_game, True) }}"
+                             data-steam-url="{{ ranked_game.steam_url() }}">
+                            <img src="{{ ranked_game.steam_image_url() }}" class="result-img">
                             <div class="result-box-caption">
                                 <div class="result-box-caption-content">
                                     <div class="result-text">
-                                        {{ game.name }}
+                                        {{ ranked_game.name }}
                                     </div>
                                     <div class="result-expand">
                                         Click for more info
@@ -131,11 +131,11 @@
         <script src="/static/js/chart.min.js"></script>
         <script>
             var currentGameTitle;
-            {% if game is defined %}
-                currentGameTitle = "{{ game.name }}";
-                var currentGameTags = "{{ game.tags_json() }}";
-                var currentGameVectorStr = "{{ game.vector_parsable() }}";
-                var vectorNamesStr = "{{ game.vector_names() }}";
+            {% if query_game is defined %}
+                currentGameTitle = "{{ query_game.name }}";
+                var currentGameFeatureNames = {{ query_game.best_feature_names(True) | safe }};
+                var currentGameFeatures = {{ query_game.best_features(True) | safe }};
+                currentGameFeatures = currentGameFeatures.map(Math.log);
             {% endif %}
         </script>
         <script src="/static/js/search.js"></script>

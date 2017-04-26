@@ -27,5 +27,5 @@ def do_jaccard(query, max_results):
     else:
         return scores[:max_results]
 
-def do_cosine_sim(query, max_results, biasVector):
-    return Game.get_ranking_for_game(query, biasVector)[:max_results]
+def do_cosine_sim(query, max_results, library_vector):
+    return Game.get_ranking_for_game(query, library_vector)[:max_results]

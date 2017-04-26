@@ -44,10 +44,10 @@ def search():
         return render_template("search.html", **DEFAULT_KWARGS)
 
 def render_ranking_page(game):
-    bias_vector = None
-    if (request.cookies.get("bias_vector")):
-        bias_list = json.loads(request.cookies.get("bias_vector"))
-        bias_vector = np.array(bias_list)
-    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, biasVector=bias_vector)
+    username = request.cookies.get("username")
+    library_vector = None
+    if request.cookies.get("library_vector"):
+        library_vector = np.array(json.loads(request.cookies.get("library_vector")))
+    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, library_vector=library_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
-    return render_template("search.html", game=game, ranking=ranking, **DEFAULT_KWARGS)
+    return render_template("search.html", query_game=game, ranking=ranking, **DEFAULT_KWARGS)

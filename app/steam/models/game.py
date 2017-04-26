@@ -13,7 +13,7 @@ import time
 from . import Review
 from app import app
 from app.dynamodb import dynamodb, utils
-from app.steam.util import data_file
+from app.steam.util import data_file, mallet_file
 from bs4 import BeautifulSoup
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
@@ -53,10 +53,12 @@ class Game(object):
     __ranking = None
     __game_cache = None
     __name_inverted_index = None
+    __dimensions = None
 
     @classmethod
     def _load_caches(cls):
-        cls.__app_ids, cls.__compressed_matrix = load_compressed_matrix()
+        # cls.__app_ids, cls.__compressed_matrix = load_compressed_matrix()
+        cls.__app_ids, cls.__compressed_matrix = load_mallet_matrix()
 
         # So we can pre-compute the ranking for every single game, since the compressed matrix is
         # static per instance. Saves us a couple cycles
@@ -71,6 +73,8 @@ class Game(object):
 
         cls.__name_inverted_index = {game.normalized_name: game.app_id
                                      for game in cls.__game_cache.itervalues()}
+        cls.__dimensions = load_feature_names()
+        print(cls.__dimensions)
 
     @classmethod
     def _create_table(cls):
@@ -205,24 +209,21 @@ class Game(object):
                     islice(utils.table_scan(cls, FilterExpression=attr_cond, Limit=limit), limit))
 
     @classmethod
-    def compute_bias_vector(cls, app_id_list):
-        startVector = np.zeros(Game.__compressed_matrix.shape[1])
-        for appid in app_id_list:
-            if appid in Game.__app_id_to_index:
-                startVector += Game.__compressed_matrix[Game.__app_id_to_index[appid]]
-        startVector = (startVector / np.linalg.norm(startVector))
-        return startVector * 0.3
+    def compute_library_vector(cls, app_id_list):
+        library_vector = np.zeros(Game.__compressed_matrix.shape[1])
+        for app_id in app_id_list:
+            if app_id in Game.__app_id_to_index:
+                library_vector += Game.__compressed_matrix[Game.__app_id_to_index[app_id]]
+        library_vector /= np.linalg.norm(library_vector)
+        return library_vector
 
     @classmethod
-    def get_ranking_for_game(cls, query, biasVector):
+    def get_ranking_for_game(cls, query, library_vector, bias_weight=0.3):
         if query.app_id not in cls.__app_id_to_index:
             raise GameNotFoundException(query.app_id)
+        if library_vector is not None:
+            return Game.compute_ranking_for_vector(query.vector() + library_vector * bias_weight)
         else:
-            print(biasVector)
-            if (biasVector is not None):
-                base = Game.__compressed_matrix[Game.__app_id_to_index[query.app_id]]
-                query_vector = base + biasVector
-                return Game.compute_ranking_for_vector(query_vector)
             return [cls.get(app_id)
                     for app_id in cls.__ranking[cls.__app_id_to_index[query.app_id]]
                     if app_id != query.app_id]
@@ -248,6 +249,10 @@ class Game(object):
         self.price = price
         self.tags = tags
         self.last_updated = last_updated
+        if self.app_id not in Game.__app_id_to_index:
+            return
+        self.__vector = Game.__compressed_matrix[Game.__app_id_to_index[self.app_id]]
+        self.__best_features = np.argsort(self.vector())[::-1][:app.config["MAX_SPIDER_FEATURES"]]
 
     def __repr__(self):
         return "Game(app_id=%d,name=%s)"%(self.app_id, self.normalized_name)
@@ -259,12 +264,7 @@ class Game(object):
         if self.app_id not in Game.__app_id_to_index:
             raise GameNotFoundException(self.app_id)
         else:
-            return Game.__compressed_matrix[Game.__app_id_to_index[self.app_id]]
-
-    def vector_names(self):
-        with open(data_file('categories.csv'), 'rb') as csvfile:
-            category_reader = list(csv.reader(csvfile))
-            return ",".join([category[0] for category in category_reader])
+            return self.__vector
 
     def vector_parsable(self):
         return ",".join(map(str, self.vector()))
@@ -277,6 +277,31 @@ class Game(object):
 
     def tags_json(self):
         return json.dumps(self.tags)
+
+    def best_features(self, json_format=False):
+        features = self.__vector[self.__best_features]
+        if json_format:
+            return json.dumps(features.tolist())
+        else:
+            return features
+
+    def best_feature_names(self, json_format=False):
+        dimensions = Game.__dimensions[self.__best_features]
+        if json_format:
+            print(json.dumps(dimensions.tolist()))
+            return json.dumps(dimensions.tolist())
+        else:
+            return dimensions
+
+    def hello(self):
+        return "\""
+
+    def intersect_features(self, other_game, json_format=False):
+        features = self.__vector[other_game.__best_features]
+        if json_format:
+            return json.dumps(features.tolist())
+        else:
+            return features
 
     def to_json(self):
         return {
@@ -388,3 +413,19 @@ def load_compressed_matrix(filename=data_file("compressed_matrix.npy")):
     with open(filename, "rb") as f:
         arr = np.load(f)
     return arr[:, 0].astype(np.int), arr[:, 1:]
+
+def load_mallet_matrix(filename=mallet_file("40_features", "doc_matrix.tsv")):
+    with open(filename, "r") as f:
+        reader = csv.reader(f, delimiter="\t")
+        app_ids = list()
+        vectors = list()
+        for line in reader:
+            app_ids.append(np.int(line[1].split("/")[-1]))
+            vector = np.array(map(np.float, line[2:]))
+            vector /= np.linalg.norm(vector)
+            vectors.append(vector)
+    return np.array(app_ids), np.array(vectors)
+
+def load_feature_names(filename=mallet_file("40_features", "feature_names.csv")):
+    with open(filename, "rb") as f:
+        return np.array([line.strip() for line in f if len(line) > 0])
