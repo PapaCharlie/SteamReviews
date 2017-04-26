@@ -127,6 +127,22 @@ h1 {
       font-size: 30px;
       text-align: center;
       text-transform: uppercase; }
+    .details-overlay .details-content-wrapper .tag {
+      display: inline-block;
+      border-radius: 15px;
+      border: 3px solid #444444;
+      font-weight: 600;
+      padding: 5px 15px 5px 15px;
+      margin-right: 5px;
+      opacity: 0.7;
+      transition: 0.15s ease-in-out; }
+    .details-overlay .details-content-wrapper .tag:hover {
+      opacity: 1.0; }
+    .details-overlay .details-content-wrapper h4 {
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 35px;
+      margin-bottom: 15px; }
 
 .emphasize {
   color: #FFFFFF;
