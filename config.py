@@ -14,7 +14,8 @@ class Config(object):
     GAME_CACHE_SIZE = os.environ.get("GAME_CACHE_SIZE", 1000)
     GAME_CACHE_PULL_ON_LOAD = int(os.environ.get("GAME_CACHE_PULL_ON_LOAD", 1)) == 1
     UPDATE_GAME_ON_GET = int(os.environ.get("UPDATE_GAME_ON_GET", 0)) == 1
-    STEAM_API_KEY = "steam_key"
+    STEAM_API_KEY = os.environ.get("STEAM_API_KEY", "not_a_real_key")
+    MAX_SPIDER_FEATURES = int(os.environ.get("MAX_SPIDER_FEATURES", 20))
 
 class ProductionConfig(Config):
     DEBUG = False

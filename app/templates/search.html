@@ -60,19 +60,18 @@
                     <span class="tag">Tag 3</span>
                 </div>
                 <div class="row no-gutter">
-                {% for game in ranking %}
+                {% for ranked_game in ranking %}
                     <div class="col-sm-4">
                         <div class="result-box"
-                             data-app-id="{{ game.app_id }}"
-                             data-tags=" {{ game.tags_json() }}"
-                             data-vector="{{ game.vector_parsable() }}"
-                             data-title="{{ game.name }}"
-                             data-steam-url="{{ game.steam_url() }}">
-                            <img src="{{ game.steam_image_url() }}" class="result-img">
+                             data-app-id="{{ ranked_game.app_id }}"
+                             data-title="{{ ranked_game.name }}"
+                             data-features="{{ ranked_game.intersect_features(query_game, True) }}"
+                             data-steam-url="{{ ranked_game.steam_url() }}">
+                            <img src="{{ ranked_game.steam_image_url() }}" class="result-img">
                             <div class="result-box-caption">
                                 <div class="result-box-caption-content">
                                     <div class="result-text">
-                                        {{ game.name }}
+                                        {{ ranked_game.name }}
                                     </div>
                                     <div class="result-expand">
                                         Click for more info
