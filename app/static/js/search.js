@@ -64,6 +64,15 @@ $(document).ready(function () {
 			$(".details-img").attr("src", resultBox.children(".result-img").attr("src"));
 			$(".details-link").attr("href", resultBox.data("steam-url"));
 
+			var tagsDiv = $(".details-tags");
+			tagsDiv.empty();
+			var searchTags = JSON.parse(resultBox.data("tags"));
+			console.log(searchTags);
+			for (var key in searchTags) {
+				if (!searchTags.hasOwnProperty(key)) continue;
+				tagsDiv.append("<p class='tag unselectable'>" + key + "</p>")
+			}
+
 			selectedAppID = resultBox.data("app-id");
 
 			var gameVector = resultBox.data("vector");
