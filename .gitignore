@@ -1,7 +1,9 @@
 *.pyc
 .DS_Store
+.map
 venv
 migrations
 .ipynb_checkpoints/
+.sass-cache/
 SteamyReviews.sublime-project
 SteamyReviews.sublime-workspace

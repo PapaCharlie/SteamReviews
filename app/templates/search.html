@@ -1,18 +1,22 @@
 <html>
     <title>{{ name }}</title>
     <head>
-        <link rel="stylesheet" href="/static/bootstrap.min.css">
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,600" rel="stylesheet">
-        <link rel="stylesheet" href="/static/main.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/search.css">
     </head>
     <body>
-        <div class="topcorner">
-            <p>Project Name: {{ name }}</p>
-            <p>Student Name: ({{ netid }})</p>
-        </div>
         <img class="steam-back" src="/static/steam.png">
         <h1>STEAMY REVIEWS</h1>
         <div class="overlay"></div>
+        <div class="topcorner" data-test="elem1 elem2 elem3" >
+            <p>Project name: {{ name }}</p>
+            <p>Student NetIDs: {{ netid }}</p>
+        </div>
+        <button class="btn btn-info steam-login">
+            <span>Login to Steam</span>
+            <span class="btn-desc">For personalized suggestions</span>
+        </button>
         <div class="container">
             <form class="form-inline global-search">
                 <div class="form-group">
@@ -29,6 +33,10 @@
                 </div>
                 <button type="submit" class="btn btn-info">Submit</button>
             </form>
+<!--             <button class="btn btn-info">
+                <span>Top Steam library suggestions</span>
+                <span class="btn-desc">Ignoring the query field</span>
+            </button> -->
             {% if didyoumean1 is defined %}
                  <h2 class="suggested">
                     We couldn't find anything for <span class="emphasize">{{query|e}}</span>!
@@ -42,28 +50,94 @@
 
         {% if ranking is defined %}
             <!-- With love from https://github.com/BlackrockDigital/startbootstrap-creative -->
-            <div class="container-fluid">
-                <h2 style="z-index: 10;" class="result-head">Showing results for: <a href="{{ game.steam_url() }}"><span class="emphasize">{{ game.name }}</span></a></h2>
+            <div class="container-fluid results">
+                <h2 class="result-head">Showing results for: <a href="{{ game.steam_url() }}"><span class="emphasize">{{ game.name }}</span></a></h2>
+                <!-- <div class="tags text-center" data-tags="{{ game.tags_json() }}">
+                    <h3 class="unselectable">Tags generated from game reviews</h3>
+                    <p class="unselectable">Click to remove from results</p>
+                </div> -->
                 <div class="row no-gutter">
                 {% for game in ranking %}
                     <div class="col-sm-4">
-                        <a href="{{ game.steam_url() }}" class="result-box">
+                        <div class="result-box"
+                             data-app-id="{{ game.app_id }}"
+                             data-tags=" {{ game.tags_json() }}"
+                             data-vector="{{ game.vector_parsable() }}"
+                             data-title="{{ game.name }}"
+                             data-steam-url="{{ game.steam_url() }}">
                             <img src="{{ game.steam_image_url() }}" class="result-img">
                             <div class="result-box-caption">
                                 <div class="result-box-caption-content">
                                     <div class="result-text">
                                         {{ game.name }}
                                     </div>
+                                    <div class="result-expand">
+                                        Click for more info
+                                    </div>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 {% endfor %}
                 </div>
             </div>
         {% endif %}
 
+        <div class="details-overlay">
+        <div class="details-content-wrapper">
+            <div class="details-nav">
+                <span class="glyphicon glyphicon-remove details-close" aria-hidden="true"></span>
+            </div>
+            <div class="details-body">
+            <!-- <img class="details-img"> -->
+            <h1 class="details-title unselectable"></h1>
+            <p class="text-center">
+                <a class="details-btn btn details-link">View on Steam</a>
+                <a class="details-btn btn details-query">Use game as query</a>
+            </p>
+            <canvas class="details-attribute-chart"></canvas>
+            <h4 class="unselectable text-center">Tags from User Reviews</h4>
+            <div class="details-tags text-center">
+            </div>
+            </div>
         </div>
-    </body>
+        </div>
 
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="glyphicon glyphicon-remove close-button" aria-hidden="true"></span>
+                        </button>
+                        <h4 class="modal-title unselectable">Steam login</h4>
+                    </div>
+                    <form action="/accounts/login" method="post">
+                    <div class="modal-body">
+                        <p>Logging into Steam helps us personalize search results and suggest games based on your library.</p>
+                        <div class="form-group">
+                            <input class="login-input form-input" type="text" name="username" placeholder="Steam ID">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default login-btn" >Login</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="/static/js/chart.min.js"></script>
+        <script>
+            var currentGameTitle;
+            {% if game is defined %}
+                currentGameTitle = "{{ game.name }}";
+                var currentGameTags = "{{ game.tags_json() }}";
+                var currentGameVectorStr = "{{ game.vector_parsable() }}";
+                var vectorNamesStr = "{{ game.vector_names() }}";
+            {% endif %}
+        </script>
+        <script src="/static/js/search.js"></script>
+    </body>
 </html>

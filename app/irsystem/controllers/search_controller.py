@@ -3,8 +3,10 @@ from __future__ import print_function
 import app
 import logging
 import urllib
+import json
+import numpy as np
 
-from . import irsystem, request, render_template
+from . import irsystem, request, render_template, session
 from app.irsystem.models.search import do_jaccard, do_cosine_sim
 from app.steam.models import Game
 
@@ -35,12 +37,17 @@ def search():
                                    didyoumean1=didyoumean1,
                                    didyoumean2=didyoumean2,
                                    query=query,
+                                   username=request.cookies.get("username"),
                                    **DEFAULT_KWARGS)
 
     else:
         return render_template("search.html", **DEFAULT_KWARGS)
 
 def render_ranking_page(game):
-    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS)
+    bias_vector = None
+    if (request.cookies.get("bias_vector")):
+        bias_list = json.loads(request.cookies.get("bias_vector"))
+        bias_vector = np.array(bias_list)
+    ranking = do_cosine_sim(game, max_results=MAX_RANK_RESULTS, biasVector=bias_vector)
     logging.error("Results for " + game.normalized_name + ": " + str(ranking))
     return render_template("search.html", game=game, ranking=ranking, **DEFAULT_KWARGS)
